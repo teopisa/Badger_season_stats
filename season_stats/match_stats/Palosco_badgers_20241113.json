@@ -6,33 +6,33 @@
     },
     "stats_partita": {
         "Progressione_partita": {
+            "Palosco": {
+                "1Q": 0,
+                "2Q": 0,
+                "3Q": 0,
+                "4Q": 55
+            },
             "Badgers": {
                 "1Q": 0,
                 "2Q": 0,
                 "3Q": 0,
                 "4Q": 70
-            },
-            "PotascetBasket": {
-                "1Q": 0,
-                "2Q": 0,
-                "3Q": 0,
-                "4Q": 55
             }
         },
         "Punti_per_partita": {
+            "Palosco": {
+                "1Q": 0,
+                "2Q": 0,
+                "3Q": 0,
+                "4Q": 55,
+                "TOT": 55
+            },
             "Badgers": {
                 "1Q": 0,
                 "2Q": 0,
                 "3Q": 0,
                 "4Q": 70,
-                "TOT": 60
-            },
-            "PotascetBasket": {
-                "1Q": 0,
-                "2Q": 0,
-                "3Q": 0,
-                "4Q": 55,
-                "TOT": 21
+                "TOT": 70
             }
         },
         "Statistiche_squadra": {

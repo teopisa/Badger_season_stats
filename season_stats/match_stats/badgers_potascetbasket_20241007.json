@@ -1,7 +1,7 @@
 {
     "info_partita": {
-        "home": "Zanica Badgers",
-        "away": "Potascet Badgers",
+        "home": "Badgers",
+        "away": "PotascetBasket",
         "data": "09/10/2024"
     },
     "stats_partita": {
@@ -25,14 +25,14 @@
                 "2Q": 13,
                 "3Q": 11,
                 "4Q": 12,
-                "toT": 49
+                "TOT": 49
             },
             "PotascetBasket": {
                 "1Q": 15,
                 "2Q": 10,
                 "3Q": 5,
                 "4Q": 5,
-                "toT": 35
+                "TOT": 35
             }
         },
         "Statistiche_squadra": {

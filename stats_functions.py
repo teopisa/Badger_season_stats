@@ -8,12 +8,6 @@ def convert_percentage_to_string(percentage, match):
     """
     Convert percentage to string format with appropriate handling based on the match context.
     """
-    # if isinstance(percentage, str) and '%' in percentage:
-    #     # If the percentage is already a string (e.g., '38.89%'), strip the '%' and convert to float
-    #     percentage = float(percentage.strip('%'))
-    # elif isinstance(percentage, (int, float)):
-    #     # Convert numeric values to percentage string format
-    #     percentage = f"{percentage:.0f}%"
     
     if match == 'season_stats/match_stats/badgers_potascetbasket_20241007.json':
         return f"{percentage:.0f}%"
