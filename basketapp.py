@@ -6,15 +6,16 @@ from stats_giocatori import display_stats_giocatori
 import random
 import time
 
+st.sidebar.image('zanica-badgers Logo.webp', use_column_width=True)
 
 progress_texts = [
-    "I giocatori si stanno riscaldando...",
-    "Il mister sta preparando le tattiche...",
-    "I tifosi hanno preso posto sugli spalti",
-    "I giocatori stanno entrando in campo...",
-    "Il pubblico è in delirio...",
-    "L'arbitro sta controllando il terreno di gioco...",
-    "Le due squadre sono nel tunnel..."
+    "Panda sta scrivendo su whatsapp...",
+    "Teo sta preparando le pagelle...",
+    "Claud sta chiamando 1...",
+    "Iachi sta aspettando il cambio...",
+    "Il Rails sta preparando la kingscross...",
+    "Gli avversari si stanno mettendo a zona...",
+    "la squadra sta rispondendo ai sondaggi..."
     ]
 
 my_bar = st.progress(0)
@@ -34,7 +35,7 @@ matches = load_json_files(json_folder)
 
 # Pagine disponibili
 st.sidebar.title("Menù")
-page = st.sidebar.selectbox("Seleziona una pagina", ["Stats Partita", "Stats Giocatore"])
+page = st.sidebar.selectbox("cosa vuoi analizzare?", ["Stats Partita", "Stats Giocatore"])
 
 # Pagina: Stats Partita
 if page == "Stats Partita":

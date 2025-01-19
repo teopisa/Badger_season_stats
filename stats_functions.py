@@ -2,6 +2,7 @@ import os
 import json
 import pandas as pd
 import streamlit as st
+import matplotlib.pyplot as plt
 
 
 def convert_percentage_to_string(percentage, match):
@@ -141,3 +142,23 @@ def get_player_shots(matches, player_name):
                     if x is not None and y is not None:
                         player_shots.append((x, y, shot_result))
     return player_shots
+
+
+def create_donut_chart(label, value, total, color):
+    """Crea un grafico a ciambella uniforme con il testo al centro."""
+    fig, ax = plt.subplots(figsize=(4, 4))  # Dimensione uniforme
+    ax.pie(
+        [value, total - value],
+        startangle=90,
+        colors=[color, 'black'],
+        wedgeprops=dict(width=0.3, edgecolor='white')  # Imposta spessore ciambella
+    )
+    
+    # Aggiungi testo al centro
+    percentage = int((value / total) * 100) if total > 0 else 0
+    ax.text(0, 0, f"{label}\n{value}/{total}\n{percentage}%", 
+            ha='center', va='center', fontsize=14, color='black', weight='bold')
+    
+    # Rimuovi il contorno esterno
+    ax.set_aspect('equal')  # Assicura che sia perfettamente rotondo
+    return fig
