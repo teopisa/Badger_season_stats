@@ -10,7 +10,7 @@ def convert_percentage_to_string(percentage, match):
     """
     
     if match == 'season_stats/match_stats/badgers_potascetbasket_20241007.json':
-        return f"{percentage:.0f}%"
+        return f"{percentage * 100}%"
     else:
         return f"{percentage}%"
 
