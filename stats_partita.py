@@ -49,12 +49,27 @@ def display_stats_partita(json_folder, matches):
    
     # Statistiche giocatori
     stats_giocatori = selected_match['stats_giocatore']
+
+    for player in stats_giocatori:
+        player['evaluation'] = (
+            player['pts'] +
+            player['reb'] +
+            player['ast'] +
+            player['bk'] +
+            player['stl'] -
+            player['2p_made'] - 
+            player['3p_made']-
+            player['ft_made'] -
+            player['to'] -
+            player['foul']
+        )
+
     players_df = pd.DataFrame(stats_giocatori).drop(columns=['shots'], errors='ignore')
     players_df['ft_%'] = players_df['ft_%'].apply(lambda x: convert_percentage_to_string(x, selected_match))
     players_df['2p_%'] = players_df['2p_%'].apply(lambda x: convert_percentage_to_string(x, selected_match))
     players_df['3p_%'] = players_df['3p_%'].apply(lambda x: convert_percentage_to_string(x, selected_match))
 
-    columns_to_select = ['shirtnumber', 'name', 'pts', 'ft_%', '2p_made', '2p_taken', 
+    columns_to_select = ['shirtnumber', 'name', 'pts', 'evaluation',  'ft_%', '2p_made', '2p_taken', 
                          '2p_%', '3p_made', '3p_taken', '3p_%', 'reb', 'dreb', 
                          'orib', 'ast', 'to', 'foul', 'stl', 'bk', 'ft_made', 'ft_taken']
     valid_columns = [col for col in columns_to_select if col in players_df.columns]
@@ -71,10 +86,31 @@ def display_stats_partita(json_folder, matches):
     # Mostra la tabella con stile personalizzato
     styled_df = (
         players_df.style)
+    
     st.dataframe(styled_df, hide_index= True, use_container_width= True, height=460)
 
+    mvp = players_df.loc[players_df['evaluation'].idxmax()]
+    mvp_text = (
+        f"MVP: numero: {mvp['shirtnumber']}, {mvp['name']} | "
+        f"Valutazione: {mvp['evaluation']} | "
+        f"Punti:{mvp['pts']} | "
+        f"Assist: {mvp['ast']} | "
+        f"Rimbalzi: {mvp['reb']} | "
+        f"Palle Recuperate: {mvp['stl']} | "
+        f"Stoppate: {mvp['bk']}"
+    )
 
-     # Grafici a ciambella (Donut Chart)
+    # Display MVP details
+    st.markdown(
+        f"""
+        <div style="text-align: center; font-size: 22px; font-weight: bold; margin-top: 20px;">
+            {mvp_text}
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
+    # Grafici a ciambella (Donut Chart)
     st.subheader("Statistiche della Squadra")
     statistiche_squadra = selected_match['stats_partita']['Statistiche_squadra']
     col1, col2, col3 = st.columns(3)
