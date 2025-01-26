@@ -5,6 +5,7 @@ from stats_partita import display_stats_partita
 from stats_giocatori import display_stats_giocatori
 import random
 import time
+st.set_page_config(layout= "wide")
 
 st.sidebar.image('zanica-badgers Logo.webp', use_column_width=True)
 

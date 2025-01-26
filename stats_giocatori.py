@@ -2,6 +2,8 @@ import streamlit as st
 import pandas as pd
 from mplbasketball import Court
 from stats_functions import *
+import matplotlib.lines as mlines
+
 
 def display_stats_giocatori(json_folder, matches):
     create_title_text("Stats Giocatori")
@@ -102,6 +104,10 @@ def display_stats_giocatori(json_folder, matches):
             ax.plot(x, y, 'o', color=color, alpha=0.9, markersize=7)
             ax.set_xlim(-8, 8)  # x-axis from -8 to 8
             ax.set_ylim(0, 15)  # y-axis from 0 to 15
+            orange_patch = mlines.Line2D([], [], marker='o', color='w', markerfacecolor='orange', markersize=10, label='Tiri Realizzati')
+            black_patch = mlines.Line2D([], [], marker='o', color='w', markerfacecolor='black', markersize=10, label='Tiri Sbagliati')
+
+            ax.legend(handles=[orange_patch, black_patch])
 
         st.pyplot(fig)
 

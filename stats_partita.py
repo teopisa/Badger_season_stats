@@ -3,6 +3,7 @@ import pandas as pd
 from mplbasketball import Court
 from stats_functions import *
 import matplotlib.pyplot as plt
+import matplotlib.lines as mlines
 
 
 
@@ -124,5 +125,10 @@ def display_stats_partita(json_folder, matches):
 
     ax.set_xlim(-8, 8)
     ax.set_ylim(0, 15)
+    orange_patch = mlines.Line2D([], [], marker='o', color='w', markerfacecolor='orange', markersize=10, label='Tiri Realizzati')
+    black_patch = mlines.Line2D([], [], marker='o', color='w', markerfacecolor='black', markersize=10, label='Tiri Sbagliati')
+
+    ax.legend(handles=[orange_patch, black_patch])
+
     create_title_text("Mappa Tiri")
     st.pyplot(fig)
