@@ -91,6 +91,7 @@ def get_unique_player_names(matches):
 # Calcola le statistiche per un giocatore
 def calculate_player_stats(matches, player_name):
     total_stats = {
+        "Partite Giocate" : 0, 
         "Punti Totali": 0,
         "Punti per Partita": 0,
         "Rimbalzi Totali": 0,
@@ -101,6 +102,8 @@ def calculate_player_stats(matches, player_name):
         "Assist per Partita": 0,
         "Stoppate Totali": 0,
         "Stoppate per Partita": 0,
+        "Palle Rubate Totali": 0,
+        "Palle Rubate Per partita": 0,
         "Falli Totali": 0,
         "Falli per Partita": 0,
         "Tiri da 2 Realizzati": 0,
@@ -117,12 +120,14 @@ def calculate_player_stats(matches, player_name):
         for player in match['stats_giocatore']:
             if player['name'] == player_name:
                 matches_played += 1
+                total_stats["Partite Giocate"] = matches_played
                 total_stats["Punti Totali"] += player['pts']
                 total_stats["Rimbalzi Totali"] += player['reb']
                 total_stats["Rimbalzi Difesa Totali"] += player['dreb']
                 total_stats["Rimbalzi Attacco Totali"] += player['orib']
                 total_stats["Assist Totali"] += player['ast']
                 total_stats["Stoppate Totali"] += player['bk']
+                total_stats["Palle Rubate Totali"] += player['stl']
                 total_stats["Falli Totali"] += player['foul']
                 total_stats["Tiri da 2 Realizzati"] += player['2p_made']
                 total_stats["Tiri da 2 Tentati"] += player['2p_taken']
@@ -137,6 +142,7 @@ def calculate_player_stats(matches, player_name):
         total_stats["Rimbalzi per Partita"] = (total_stats["Rimbalzi Totali"] / matches_played)
         total_stats["Assist per Partita"] = (total_stats["Assist Totali"] / matches_played)
         total_stats["Stoppate per Partita"] = (total_stats["Stoppate Totali"] / matches_played)
+        total_stats["Palle Rubate Per partita"] = (total_stats["Palle Rubate Totali"] / matches_played)
         total_stats["Falli per Partita"] = (total_stats["Falli Totali"] / matches_played)
 
     # Calcola percentuali
@@ -182,8 +188,8 @@ def create_donut_chart(label, value, total, color):
         fig, ax = plt.subplots()
         ax.text(
             0.5, 0.5, f"Nessun {label} tentato",
-            ha='center', va='center', fontsize=14,
-            bbox=dict(boxstyle="round,pad=0.3", edgecolor="black", facecolor="lightgray")
+            ha='center', va='center', fontsize=20,
+            bbox=dict(boxstyle="round,pad=0.3", facecolor="Orange")
         )
         ax.axis('off')  # Rimuove gli assi
         return fig
@@ -232,3 +238,40 @@ def calculate_player_evaluation(matches, player_name):
     # Calcolo media della valutazione
     average_evaluation = round(total_evaluation / matches_played, 1) if matches_played > 0 else 0
     return {"Valutazione Totale": total_evaluation, "Valutazione Media": average_evaluation}
+
+def create_title_text(text):
+    st.markdown(
+        f"""
+        <div style="text-align: center;">
+            <h1 style="font-size: 50px;">{text}</h1>
+        </div>
+        """,
+        unsafe_allow_html=True
+        )
+    
+def player_evaluation(player):
+    player['evaluation'] = (
+        player['pts'] +
+        player['reb'] +
+        player['ast'] +
+        player['bk'] +
+        player['stl'] -
+        player['2p_made'] - 
+        player['3p_made']-
+        player['ft_made'] -
+        player['to'] -
+        player['foul']
+    )
+
+def define_mvp_match(players_df):
+    mvp = players_df.loc[players_df['evaluation'].idxmax()]
+    mvp_text = (
+        f"MVP: numero: {mvp['shirtnumber']}, {mvp['name']} | "
+        f"Valutazione: {mvp['evaluation']} | "
+        f"Punti:{mvp['pts']} | "
+        f"Assist: {mvp['ast']} | "
+        f"Rimbalzi: {mvp['reb']} | "
+        f"Palle Recuperate: {mvp['stl']} | "
+        f"Stoppate: {mvp['bk']}"
+    )
+    return mvp_text

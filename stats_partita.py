@@ -30,9 +30,10 @@ def display_stats_partita(json_folder, matches):
      # Punti per partita come testo
     punti_per_partita = selected_match['stats_partita']['Punti_per_partita']
     punti_text = "".join([
-    f"<p style='font-size: 40px;'>{quarter}: {scores}-{punti_per_partita[away_team][quarter]}</p>"
+    f"<p style='font-size: 30px;'>{quarter}: {scores}-{punti_per_partita[away_team][quarter]}</p>"
     for quarter, scores in punti_per_partita[home_team].items() if quarter != 'TOT'
     ])
+
     # Titolo e punteggio centrati
     st.markdown(
     f"""
@@ -40,78 +41,55 @@ def display_stats_partita(json_folder, matches):
         <h1 style="font-size: 50px;">{home_team} vs {away_team}</h1>
         <h2 style="font-size: 50px;">{"Risultato:"}</h2>
         <h3 style="font-size: 50px;">{punti_home} - {punti_away}</h3>
-        <h4 style="font-size: 50px;">{punti_text}</h4>
     </div>
     """,
     unsafe_allow_html=True
     )
+    col1, col2, col3 = st.columns(3)
 
-   
+    with col2:
+        st.dataframe(punti_per_partita, use_container_width=True)
     # Statistiche giocatori
     stats_giocatori = selected_match['stats_giocatore']
 
     for player in stats_giocatori:
-        player['evaluation'] = (
-            player['pts'] +
-            player['reb'] +
-            player['ast'] +
-            player['bk'] +
-            player['stl'] -
-            player['2p_made'] - 
-            player['3p_made']-
-            player['ft_made'] -
-            player['to'] -
-            player['foul']
-        )
+        player_evaluation(player)
 
     players_df = pd.DataFrame(stats_giocatori).drop(columns=['shots'], errors='ignore')
     players_df['ft_%'] = players_df['ft_%'].apply(lambda x: convert_percentage_to_string(x, selected_match))
     players_df['2p_%'] = players_df['2p_%'].apply(lambda x: convert_percentage_to_string(x, selected_match))
     players_df['3p_%'] = players_df['3p_%'].apply(lambda x: convert_percentage_to_string(x, selected_match))
 
-    columns_to_select = ['shirtnumber', 'name', 'pts', 'evaluation',  'ft_%', '2p_made', '2p_taken', 
+    columns_to_select = ['shirtnumber', 'name', 'pts', 'evaluation',  'ft_%', 'ft_made', 'ft_taken',
+                         '2p_made', '2p_taken', 
                          '2p_%', '3p_made', '3p_taken', '3p_%', 'reb', 'dreb', 
-                         'orib', 'ast', 'to', 'foul', 'stl', 'bk', 'ft_made', 'ft_taken']
+                         'orib', 'ast', 'to', 'foul', 'stl', 'bk']
     valid_columns = [col for col in columns_to_select if col in players_df.columns]
     players_df = players_df[valid_columns].reset_index(drop=True)
 
-    st.markdown(
-    f"""
-    <div style="text-align: center;">
-        <h1 style="font-size: 50px;">{"Stats Giocatori"}</h1>
-    </div>
-    """,
-    unsafe_allow_html=True
-    )
+    create_title_text("Stats Giocatori")
+
     # Mostra la tabella con stile personalizzato
     styled_df = (
         players_df.style)
     
     st.dataframe(styled_df, hide_index= True, use_container_width= True, height=460)
 
-    mvp = players_df.loc[players_df['evaluation'].idxmax()]
-    mvp_text = (
-        f"MVP: numero: {mvp['shirtnumber']}, {mvp['name']} | "
-        f"Valutazione: {mvp['evaluation']} | "
-        f"Punti:{mvp['pts']} | "
-        f"Assist: {mvp['ast']} | "
-        f"Rimbalzi: {mvp['reb']} | "
-        f"Palle Recuperate: {mvp['stl']} | "
-        f"Stoppate: {mvp['bk']}"
-    )
+    
 
     # Display MVP details
     st.markdown(
         f"""
         <div style="text-align: center; font-size: 22px; font-weight: bold; margin-top: 20px;">
-            {mvp_text}
+            {define_mvp_match(players_df=players_df)}
         </div>
         """,
         unsafe_allow_html=True
     )
 
     # Grafici a ciambella (Donut Chart)
-    st.subheader("Statistiche della Squadra")
+    create_title_text("Stats al tiro")
+
     statistiche_squadra = selected_match['stats_partita']['Statistiche_squadra']
     col1, col2, col3 = st.columns(3)
 
@@ -130,7 +108,7 @@ def display_stats_partita(json_folder, matches):
     fig, ax = court.draw(showaxis=True, orientation="vu", court_color='white', paint_color='white', line_color='black')
 
     player_names = [player['name'] for player in stats_giocatori]
-    selected_players = st.multiselect("Seleziona giocatori per visualizzare i tiri", ["Tutti"] + player_names)
+    selected_players = st.multiselect("Puoi selezionare anche più di un giocatore", ["Tutti"] + player_names)
 
     if "Tutti" in selected_players or not selected_players:
         shots_data = get_shots_for_players(matches, selected_match)
@@ -146,12 +124,5 @@ def display_stats_partita(json_folder, matches):
 
     ax.set_xlim(-8, 8)
     ax.set_ylim(0, 15)
-    st.markdown(
-    f"""
-    <div style="text-align: center;">
-        <h1 style="font-size: 50px;">{"Mappa Tiri"}</h1>
-    </div>
-    """,
-    unsafe_allow_html=True
-    )
+    create_title_text("Mappa Tiri")
     st.pyplot(fig)
