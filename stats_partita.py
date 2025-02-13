@@ -30,26 +30,45 @@ def display_stats_partita(json_folder, matches):
 
      # Punti per partita come testo
     punti_per_partita = selected_match['stats_partita']['Punti_per_partita']
-    punti_text = "".join([
-    f"<p style='font-size: 30px;'>{quarter}: {scores}-{punti_per_partita[away_team][quarter]}</p>"
-    for quarter, scores in punti_per_partita[home_team].items() if quarter != 'TOT'
-    ])
 
     # Titolo e punteggio centrati
+  # Titolo e punteggio centrati con stile
     st.markdown(
-    f"""
-    <div style="text-align: center;">
-        <h1 style="font-size: 50px;">{home_team} vs {away_team}</h1>
-        <h2 style="font-size: 50px;">{"Risultato:"}</h2>
-        <h3 style="font-size: 50px;">{punti_home} - {punti_away}</h3>
-    </div>
-    """,
-    unsafe_allow_html=True
-    )
-    col1, col2, col3 = st.columns(3)
+        f"""
+        <div style="text-align: center;">
+            <h1 style="font-size: 45px; font-weight: bold;">{home_team} 🆚 {away_team}</h1>
+            <h2 style="font-size: 40px; color: black;">Risultato</h2>
+            <h3 style="font-size: 55px; font-weight: bold;">{punti_home} - {punti_away}</h3>
+        </div>
+        """,
+        unsafe_allow_html=True
+        )
 
+# Disposizione dei quarti in colonne
+
+    col1, col2 = st.columns(2)
+
+    # Home team scores
+    with col1:
+        st.markdown(f"<h4 style='text-align: center; color: black;'>{home_team}</h4>", unsafe_allow_html=True)
+        st.markdown(
+            "".join([
+                f"<p style='font-size: 22px; text-align: center; background-color: #f0f0f0; padding: 5px; border-radius: 5px;'><b>{quarter}:</b> {scores}</p>"
+                for quarter, scores in punti_per_partita[home_team].items() if quarter != 'TOT'
+            ]),
+            unsafe_allow_html=True
+        )
+
+    # Away team scores
     with col2:
-        st.dataframe(punti_per_partita, use_container_width=True)
+        st.markdown(f"<h4 style='text-align: center; color: black;'>{away_team}</h4>", unsafe_allow_html=True)
+        st.markdown(
+            "".join([
+                f"<p style='font-size: 22px; text-align: center; background-color: #f0f0f0; padding: 5px; border-radius: 5px;'><b>{quarter}:</b> {punti_per_partita[away_team][quarter]}</p>"
+                for quarter in punti_per_partita[away_team] if quarter != 'TOT'
+            ]),
+            unsafe_allow_html=True
+        )
     # Statistiche giocatori
     stats_giocatori = selected_match['stats_giocatore']
 
@@ -61,9 +80,14 @@ def display_stats_partita(json_folder, matches):
     players_df['2p_%'] = players_df['2p_%'].apply(lambda x: convert_percentage_to_string(x, selected_match))
     players_df['3p_%'] = players_df['3p_%'].apply(lambda x: convert_percentage_to_string(x, selected_match))
 
-    columns_to_select = ['shirtnumber', 'name', 'pts', 'evaluation',  'ft_%', 'ft_made', 'ft_taken',
-                         '2p_made', '2p_taken', 
-                         '2p_%', '3p_made', '3p_taken', '3p_%', 'reb', 'dreb', 
+    players_df['3p'] = players_df.apply(lambda row: f"{row['3p_made']}-{row['3p_taken']}", axis=1)
+    players_df['2p'] = players_df.apply(lambda row: f"{row['2p_made']}-{row['2p_taken']}", axis=1)
+    players_df['ft'] = players_df.apply(lambda row: f"{row['ft_made']}-{row['ft_taken']}", axis=1)
+
+
+
+    columns_to_select = ['shirtnumber', 'name', 'pts', 'evaluation',  'ft', 'ft_%', 
+                         '2p', '2p_%',  '3p', '3p_%', 'reb', 'dreb', 
                          'orib', 'ast', 'to', 'foul', 'stl', 'bk']
     valid_columns = [col for col in columns_to_select if col in players_df.columns]
     players_df = players_df[valid_columns].reset_index(drop=True)
@@ -79,14 +103,8 @@ def display_stats_partita(json_folder, matches):
     
 
     # Display MVP details
-    st.markdown(
-        f"""
-        <div style="text-align: center; font-size: 22px; font-weight: bold; margin-top: 20px;">
-            {define_mvp_match(players_df=players_df)}
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
+    # Display MVP details
+    st.markdown(define_mvp_match(players_df), unsafe_allow_html=True)
 
     # Grafici a ciambella (Donut Chart)
     create_title_text("Stats al tiro")

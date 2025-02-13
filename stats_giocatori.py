@@ -36,44 +36,23 @@ def display_stats_giocatori(json_folder, matches):
             col1, col2, col3 = st.columns(3)
 
             with col1:
-                st.markdown(
-                    f"<div style='text-align: center; font-size: 50px; color: orange;'>"
-                    f"<b>{int(player_stats['Punti Totali'])}</b><br><medium>Punti</medium></div>",
-                    unsafe_allow_html=True,
-                )
+                    st.markdown(kpi_card(player_stats["Punti Totali"], "Punti"), unsafe_allow_html=True)
             with col2:
-                st.markdown(
-                    f"<div style='text-align: center; font-size: 50px; color: orange;'>"
-                    f"<b>{int(player_stats['Rimbalzi Attacco Totali'])}</b><br><medium>Rimbalzi Off</medium></div>",
-                    unsafe_allow_html=True,
-                )
+                    st.markdown(kpi_card(player_stats["Rimbalzi Attacco Totali"], "Rimbalzi Off"), unsafe_allow_html=True)
             with col3:
-                st.markdown(
-                    f"<div style='text-align: center; font-size: 50px; color: orange;'>"
-                    f"<b>{int(player_stats['Rimbalzi Difesa Totali'])}</b><br><medium>Rimbalzi Dif</medium></div>",
-                    unsafe_allow_html=True,
-                )
+                    st.markdown(kpi_card(player_stats["Rimbalzi Difesa Totali"], "Rimbalzi Dif"), unsafe_allow_html=True)
+
+                # Seconda riga con altri KPI
+            st.markdown("<div style='margin-top: 40px;'></div>", unsafe_allow_html=True)
 
             col4, col5, col6 = st.columns(3)
-            with col4:
-                st.markdown(
-                    f"<div style='text-align: center; font-size: 50px; color: orange;'>"
-                    f"<b>{int(player_stats['Stoppate Totali'])}</b><br><medium>Stoppate</medium></div>",
-                    unsafe_allow_html=True,
-                )
-            with col5:
-                st.markdown(
-                    f"<div style='text-align: center; font-size: 50px; color: orange;'>"
-                    f"<b>{int(player_stats['Palle Rubate Totali'])}</b><br><medium>Recuperi</medium></div>",
-                    unsafe_allow_html=True,
-                )
-            with col6:
-                st.markdown(
-                    f"<div style='text-align: center; font-size: 50px; color: orange;'>"
-                    f"<b>{int(player_stats['Assist Totali'])}</b><br><medium>Assist</medium></div>",
-                    unsafe_allow_html=True,
-                )
 
+            with col4:
+                    st.markdown(kpi_card(player_stats["Stoppate Totali"], "Stoppate"), unsafe_allow_html=True)
+            with col5:
+                    st.markdown(kpi_card(player_stats["Palle Rubate Totali"], "Recuperi"), unsafe_allow_html=True)
+            with col6:
+                    st.markdown(kpi_card(player_stats["Assist Totali"], "Assist"), unsafe_allow_html=True)
         # Donut charts per percentuali tiri
         player_stats = calculate_player_stats(matches, selected_player)
 

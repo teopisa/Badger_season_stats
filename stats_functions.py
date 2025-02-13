@@ -265,13 +265,36 @@ def player_evaluation(player):
 
 def define_mvp_match(players_df):
     mvp = players_df.loc[players_df['evaluation'].idxmax()]
-    mvp_text = (
-        f"MVP: numero: {mvp['shirtnumber']}, {mvp['name']} | "
-        f"Valutazione: {mvp['evaluation']} | "
-        f"Punti:{mvp['pts']} | "
-        f"Assist: {mvp['ast']} | "
-        f"Rimbalzi: {mvp['reb']} | "
-        f"Palle Recuperate: {mvp['stl']} | "
-        f"Stoppate: {mvp['bk']}"
-    )
+    
+    mvp_text = f"""
+    <div style="text-align: center; padding: 15px; background-color: #222; color: white; border-radius: 10px; margin-top: 20px;">
+        <h3 style="color: #FFA500; font-size: 28px; margin-bottom: 10px;">🏆 MVP DELLA PARTITA 🏆</h3>
+        <h2 style="color: #FFA500; "font-size: 35px; margin-bottom: 5px;">{mvp['name']} <span style="font-size: 25px;">(#{mvp['shirtnumber']})</span></h2>
+        <p style="font-size: 20px; margin-top: 10px;">
+            <b>Valutazione:</b> <span style="color: #FFD700; font-size: 22px;">{mvp['evaluation']}</span> |
+            <b>Punti:</b> {mvp['pts']} |
+            <b>Assist:</b> {mvp['ast']} |
+            <b>Rimbalzi:</b> {mvp['reb']} |
+            <b>Recuperi:</b> {mvp['stl']} |
+            <b>Stoppate:</b> {mvp['bk']}
+        </p>
+    </div>
+    """
+    
     return mvp_text
+
+
+def kpi_card(value, label, color="#FFA500"):
+    return f"""
+    <div style='
+        background-color: {color};
+        padding: 20px;
+        border-radius: 15px;
+        text-align: center;
+        box-shadow: 2px 2px 10px rgba(0,0,0,0.2);
+        width: 100%;
+        '>
+        <p style='font-size: 30px; font-weight: bold; margin: 0; color: #222;'>{int(value)}</p>
+        <p style='font-size: 22px; margin: 0; color: #fff;'>{label}</p>
+    </div>
+    """
